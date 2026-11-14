@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Punto Alfa - Dashboard</title>
+    <link rel="stylesheet" href="CSS/Syle.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Orbitron:wght@600;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- ===== PANTALLA DE LOGIN ===== -->
+    <div id="vista-login" class="login-screen">
+        <div class="login-box">
+            <div class="login-logo"><i class="fa-solid fa-crosshairs"></i></div>
+            <h1>PUNTO ALFA</h1>
+            <p></p>
+            
+            <div class="login-options">
+                <button id="btn-entrar-cliente" class="btn-cliente">
+                    <i class="fa-solid fa-user"></i> INGRESAR COMO CLIENTE
+                </button>
+                <button id="btn-entrar-admin" class="btn-admin">
+                    <i class="fa-solid fa-user-shield"></i> INGRESAR COMO ADMIN
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== INTERFAZ PRINCIPAL ===== -->
+    <div id="app-principal" style="display: none;">
+        
+        <!-- BARRA SUPERIOR -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <div class="brand">
+                    <div class="brand-logo"><i class="fa-solid fa-crosshairs"></i></div>
+                    <div>
+                        <span class="brand-sub">SISTEMA DE INVENTARIO</span>
+                        <h1 class="brand-name">PUNTO ALFA</h1>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BOTÓN DE CAMBIO DE MODO (Solo se muestra al admin) -->
+            <div class="topbar-right" id="topbar-admin-zone" style="display: none;">
+                <button id="btn-cambiar-modo" class="btn-seleccion">
+                    <span id="rol-actual"><i class="fa-solid fa-user-shield"></i> VENDEDOR</span>
+                    <span class="badge">0</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- CONTENEDOR PRINCIPAL -->
+        <div class="main-container">
+            <div class="hero-banner">
+                <div class="hero-content">
+                    <h2>TU ESCENCIA ALFA EN UN SOLO LUGAR.</h2>
+                    <p></p>
+                    <button id="BotonAgregar" class="btn-hero solo-admin" style="display:none;">
+                        <i class="fa-solid fa-plus"></i> REGISTRAR NUEVO ACTIVO
+                    </button>
+                </div>
+            </div>
+
+            <div class="dashboard-layout">
+                <!-- COLUMNA IZQUIERDA -->
+                <aside class="sidebar-filtros">
+                    <h3 class="filter-title">SECTOR / CIUDAD</h3>
+                    <ul class="filter-list" id="lista-ciudades"></ul>
+                    
+                    <h3 class="filter-title mt-4">MENÚ DE CONTROL</h3>
+                    <a href="#" class="nav-item solo-admin" data-vista="agregar" style="display:none;">
+                        <i class="fa-solid fa-plus"></i> AGREGAR ACTIVO
+                    </a>
+                    <a href="#" class="nav-item" data-vista="productos">
+                        <i class="fa-solid fa-box"></i> VER INVENTARIO
+                    </a>
+                    <a href="#" class="nav-item" id="btn-logout">
+                        <i class="fa-solid fa-power-off"></i> CERRAR SESIÓN
+                    </a>
+                </aside>
+
+                <!-- COLUMNA CENTRAL -->
+                <main class="main-content">
+                    <div class="search-bar-container">
+                        <input type="text" id="buscador" placeholder="BUSCAR ACTIVO POR NOMBRE O SECTOR...">
+                        <button class="btn-buscar-todos">TODOS</button>
+                    </div>
+
+                    <section id="vista-productos" class="vista">
+                        <div id="contenedor-lista"></div>
+                    </section>
+
+                    <section id="vista-agregar" class="vista" style="display:none;">
+                        <div class="form-card">
+                            <h2 id="titulo-operacion">REGISTRAR NUEVO ACTIVO</h2>
+                            <form id="formulario-tienda">
+                                <input type="hidden" id="prod-id">
+                                <div class="form-group">
+                                    <label for="prod-nombre">NOMBRE DEL ACTIVO</label>
+                                    <input type="text" id="prod-nombre" required>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="prod-precio">VALOR / PRECIO</label>
+                                        <input type="number" id="prod-precio" step="0.01" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="prod-ciudad">UBICACIÓN / CIUDAD</label>
+                                        <input type="text" id="prod-ciudad" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="prod-desc">ESPECIFICACIONES</label>
+                                    <textarea id="prod-desc" rows="3"></textarea>
+                                </div>
+                                <!-- ... resto del formulario ... -->
+                                <div class="form-group">
+                                    <label for="prod-img">IMAGEN DEL ACTIVO</label>
+                                    
+                                    <!-- Contenedor para URL manual y botón de galería -->
+                                    <div style="display: flex; gap: 10px; align-items: center;">
+                                        <input type="text" id="prod-img" placeholder="https://... (o usa el botón)" style="flex: 1;">
+                                        
+                                        <!-- Input real de archivo (oculto) -->
+                                        <input type="file" id="prod-file" accept="image/*" style="display: none;">
+                                        
+                                        <!-- Botón que dispara el input de archivo -->
+                                        <button type="button" class="btn-secundario" id="btn-galeria" style="padding: 12px; white-space: nowrap;" title="Seleccionar de la galería">
+                                            <i class="fa-solid fa-image"></i> GALERÍA
+                                        </button>
+                                    </div>
+                                    
+                                    <!-- Previsualización de la imagen -->
+                                    <div id="preview-container" style="margin-top: 10px; display: none; text-align: center;">
+                                        <img id="img-preview" style="max-height: 150px; border: 1px solid var(--border-color); padding: 5px; background: #111;" alt="Previsualización">
+                                    </div>
+                                </div>
+                                <!-- ... resto del formulario ... -->
+                                <div class="form-actions">
+                                    <button type="submit" id="btn-accion" class="btn-primario">GUARDAR ACTIVO</button>
+                                    <button type="button" id="btn-cancelar" class="btn-secundario">CANCELAR</button>
+                                </div>
+                            </form>
+                        </div>
+                    </section>
+                </main>
+
+                <!-- COLUMNA DERECHA -->
+                <aside class="sidebar-seleccion">
+                    <h3 class="filter-title">SELECCIÓN ACTUAL</h3>
+                    <div class="seleccion-vacia">
+                        <p>Sin activos seleccionados.</p>
+                    </div>
+                    <button class="btn-confirmar" disabled>PROCESAR PEDIDO</button>
+                </aside>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MODAL LOGIN ADMIN ===== -->
+    <div id="modal-login" class="modal-overlay" style="display:none;">
+        <div class="modal-box">
+            <h2><i class="fa-solid fa-lock"></i> ACCESO RESTRINGIDO</h2>
+            <p>Ingresa el código de autorización.</p>
+            <input type="password" id="input-password" placeholder="CÓDIGO DE ACCESO">
+            <p id="login-error" class="error-msg" style="display:none;">CÓDIGO INCORRECTO.</p>
+            <div class="modal-actions">
+                <button id="btn-login-ok" class="btn-primario">VERIFICAR</button>
+                <button id="btn-login-cancel" class="btn-secundario">ABORTAR</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Asegúrate de que las rutas sean correctas según tu carpeta -->
+    <script src="MODELO/modelos.js"></script>
+    <script src="CONTROLES/guarda_producto.js"></script>
+</body>
+</html>
